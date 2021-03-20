@@ -10,11 +10,36 @@ cd ./src
 set FLASK_APP=server.py
 flask run
 ```
+### Virtual environment
+```
++-- root
+    +-- file-manager
+        +-- src
+            .
+            .
+            .
+    +-- venv
+________________
 
+cd root
+venv\Scripts\activate
+cd file-manager\src
+set FLASK_APP=server.py
+flask run
+
+```
 ---
 
 ## Endpoints
 
-| Endpoint | Method | Description |
-|-|-|-|
-| /download | GET | Download file by given filename |
+| Endpoint | Method | Description | Parameters | Response
+|-|-|-|-|-|
+| /download | GET | Download file by given filename | String filename | String pre-signed url |
+| /upload | POST | Upload file | String filename | Object pre-signed url and fields |
+
+---
+
+## Related documentation
+* AWS pre-signed URL - https://docs.aws.amazon.com/AmazonS3/latest/userguide/ShareObjectPreSignedURL.html
+* boto3 pre-signed URL - https://boto3.amazonaws.com/v1/documentation/api/latest/guide/s3-presigned-urls.html
+
