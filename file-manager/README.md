@@ -34,8 +34,9 @@ flask run
 
 | Endpoint | Method | Description | Parameters | Response
 |-|-|-|-|-|
-| /download | GET | Download file by given filename | String filename | String pre-signed url |
-| /upload | POST | Upload file | String filename | Object pre-signed url and fields |
+| /download | GET | Download file by given filename | String : filename | String : pre-signed url |
+| /upload | POST | Upload file | String : filename | Object : pre-signed url and fields |
+| /filenames | GET | Get list of all files currently uploaded | | Array : List of filenames
 
 ---
 
