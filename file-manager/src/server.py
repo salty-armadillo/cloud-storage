@@ -3,6 +3,7 @@ from flask import Flask
 from flask_cors import CORS
 from json import dumps
 from routes.download import DOWNLOAD
+from routes.upload import UPLOAD
 from routes.base import BASE
 
 
@@ -25,6 +26,7 @@ CORS(APP)
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, default_handler)
 APP.register_blueprint(DOWNLOAD)
+APP.register_blueprint(UPLOAD)
 APP.register_blueprint(BASE)
 
 if __name__ == "__main__":
