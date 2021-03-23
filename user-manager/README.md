@@ -1,6 +1,6 @@
-# File Manager
+# User Manager
 
-This is the cloud backend connecting to the S3 instance and helping to store and retrieve files. It is a Python Flask server deployed as an AWS Lambda instance.
+This is the local backend connected to the Electron frontend. It also helps to connect to the cloud backend and provides core functionality. It is a Python Flask server and will be packaged together with the Electron application.
 
 ---
 
@@ -34,13 +34,12 @@ python server.py
 
 | Endpoint | Method | Description | Parameters | Response
 |-|-|-|-|-|
-| /download | GET | Download file by given filename | String : filename | String : pre-signed url |
-| /upload | POST | Upload file | String : filename | Object : pre-signed url and fields |
-| /filenames | GET | Get list of all files currently uploaded | | Array : List of filenames
+| /download | GET | Download file by given filename | String : filename, String: location | {} |
+| /upload | POST | Upload file | String : filename | {} |
+| /filenames | GET | Get list of all files currently uploaded | | Array : List of filenames |
 
 ---
 
 ## Related documentation
-* AWS pre-signed URL - https://docs.aws.amazon.com/AmazonS3/latest/userguide/ShareObjectPreSignedURL.html
-* boto3 pre-signed URL - https://boto3.amazonaws.com/v1/documentation/api/latest/guide/s3-presigned-urls.html
+
 
