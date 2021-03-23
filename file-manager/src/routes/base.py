@@ -4,9 +4,9 @@ from services.base import fetch_filenames
 
 BASE = Blueprint('base', __name__)
 
-@BASE.route('/', methods=['GET'])
+@BASE.route('/healthcheck', methods=['GET'])
 def base():
-    return "can connect!"
+    return "file-manager healthcheck successful. Connected!"
 
 @BASE.route('/filenames', methods=['GET'])
 def get_filenames():
