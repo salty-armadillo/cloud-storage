@@ -8,7 +8,7 @@ This is the cloud backend connecting to the S3 instance and helping to store and
 ```
 cd ./src
 set FLASK_APP=server.py
-flask run
+python server.py
 ```
 ### Virtual environment
 ```
@@ -25,7 +25,7 @@ cd root
 venv\Scripts\activate
 cd file-manager\src
 set FLASK_APP=server.py
-flask run
+python server.py
 
 ```
 ---
