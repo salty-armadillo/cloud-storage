@@ -1,4 +1,3 @@
-from flask import current_app
 import requests
 from werkzeug.exceptions import InternalServerError
 import config
@@ -13,12 +12,12 @@ def get_file(filename, location):
 
     if presignedResponse.status_code != 200:
         raise InternalServerError("An error has occurred. Could not obtain file from cloud.")
-    else:
-        presignedUrl = presignedResponse.text
+    
+    presignedUrl = presignedResponse.text
 
-        downloadResponse = requests.get(presignedUrl)
-        wholeFilePath = f"{location}/{filename}"
+    downloadResponse = requests.get(presignedUrl)
+    wholeFilePath = f"{location}/{filename}"
 
-        open(wholeFilePath, "wb").write(downloadResponse.content)
+    open(wholeFilePath, "wb").write(downloadResponse.content)
 
     return
