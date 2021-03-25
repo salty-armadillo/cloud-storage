@@ -13,7 +13,7 @@ python server.py
 ### Virtual environment
 ```
 +-- root
-    +-- file-manager
+    +-- user-manager
         +-- src
             .
             .
@@ -40,6 +40,18 @@ python server.py
 
 ---
 
-## Related documentation
+## Key Features
 
+### TLS Encryption (HTTPS)
+The endpoints of this server are using HTTPS which allows for all traffic travelling to and from to be encrypted. This is a signifcant safety feature of this application due to the information being sent to it - e.g. passwords, encrypted files etc - which should be kept secure.
+
+The implementation of this is using Flask's built-in HTTPS support - `app.run(ssl_context='adhoc')` - and the pyopenssl package.
+
+There are some caveats with this however. As it is using a self-signed certificate this is obviously not a production-grade solution. For something a bit more solid, certificates issued by a Certificate Authority (such as LetsEncrypt's CertBot) would be the way to go.
+
+
+---
+
+## Related documentation
+* Flask documentation: https://flask.palletsprojects.com/en/1.1.x/
 
