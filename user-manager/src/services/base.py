@@ -1,13 +1,17 @@
-import boto3
+import requests
+import config
 
-s3 = boto3.resource('s3')
+CLOUD_BASE_ENDPOINT = config.CLOUD_BASE_ENDPOINT
 
-def fetch_filenames(bucket):
-    '''Returns list of all files in the given bucket'''
-    s3Bucket = s3.Bucket(bucket)
+def fetch_filenames():
+    '''Returns list of all files''' 
+    filenamesResponse = requests.get(
+        f"{CLOUD_BASE_ENDPOINT}/filenames"
+    )
+
+    if filenamesResponse.status_code != 200:
+        raise filenamesResponse("An error has occurred. Could not obtain list of files from cloud.")
     
-    files = []
-    for file in s3Bucket.objects.all():
-        files.append(file.key)
-    
+    files = filenamesResponse.json()
+
     return files
