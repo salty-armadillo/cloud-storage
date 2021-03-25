@@ -30,4 +30,4 @@ APP.register_blueprint(UPLOAD)
 APP.register_blueprint(BASE)
 
 if __name__ == "__main__":
-    APP.run(port=(int(sys.argv[1]) if len(sys.argv) == 2 else 8081), debug=True)
+    APP.run(port=(int(sys.argv[1]) if len(sys.argv) == 2 else 8081), debug=True, ssl_context='adhoc')
