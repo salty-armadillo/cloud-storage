@@ -60,4 +60,5 @@ A lot of thought and research went into the key storage aspect of this design de
 ## Related documentation
 * Flask documentation: https://flask.palletsprojects.com/en/1.1.x/
 * PyCryptodome AES: https://pycryptodome.readthedocs.io/en/latest/src/cipher/aes.html
+* Hashing passwords with bcrypt: https://heynode.com/blog/2020-04/salt-and-hash-passwords-bcrypt
 
