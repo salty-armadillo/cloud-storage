@@ -10,5 +10,6 @@ def download_file():
     '''Download file given filename'''
     filename = request.args.get("filename")
     location = request.args.get("location")
-    get_file(filename, location)
+    keypath = request.args.get("keypath")
+    get_file(filename, location, keypath)
     return json.dumps({})
