@@ -34,8 +34,8 @@ python server.py
 
 | Endpoint | Method | Description | Parameters | Response
 |-|-|-|-|-|
-| /download | GET | Download file by given filename | String : filename, String: location | {} |
-| /upload | POST | Upload file | String : filename | {} |
+| /download | GET | Download file by given filename | String : filename, String: location, String: keypath | {} |
+| /upload | POST | Upload file | String : filename, String: keypath or keylocation | {} |
 | /filenames | GET | Get list of all files currently uploaded | | Array : List of filenames |
 
 ---
@@ -49,9 +49,15 @@ The implementation of this is using Flask's built-in HTTPS support - `app.run(ss
 
 There are some caveats with this however. As it is using a self-signed certificate this is obviously not a production-grade solution. For something a bit more solid, certificates issued by a Certificate Authority (such as LetsEncrypt's CertBot) would be the way to go.
 
+### File encryption
+One of the key features of the application is the encryption of all files prior to storing the cloud. It is using the PyCryptodome AES (CBC Mode) encryption with a randomly generated key and initialisation vector. The key and IV are stored in a JSON file which is saved on the user's machine in a location of their choosing.
+
+A lot of thought and research went into the key storage aspect of this design despite ultimately going with leaving it up to the user (like an SSH key). Similar to the TLS Encryption this was primarily to do with my own technical limitations. I had thought that I could possibly utilise a private-public key concept or secure storage in a RDS database but these are all options I will have to explore more thoroughly if given more time and capacity.
+
 
 ---
 
 ## Related documentation
 * Flask documentation: https://flask.palletsprojects.com/en/1.1.x/
+* PyCryptodome AES: https://pycryptodome.readthedocs.io/en/latest/src/cipher/aes.html
 
