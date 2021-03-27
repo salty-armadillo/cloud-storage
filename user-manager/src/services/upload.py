@@ -4,7 +4,7 @@ import os
 import requests
 from werkzeug.exceptions import InternalServerError
 import json
-from base64 import b64encode
+from base64 import b64encode, b64decode
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
 from Crypto.Random import get_random_bytes
@@ -51,16 +51,16 @@ def encrypt_file(filepath, keypath, keylocation):
     else:
         with open(keypath, 'r') as keyFile:
             keyData = json.load(keyFile)
-            key = keyData['data']
-            iv = keyData['iv']
+            key = b64decode(keyData['key'])
+            iv = b64decode(keyData['iv'])
         cipher = AES.new(key, AES.MODE_CBC, iv)
 
     with open(filepath, 'rb') as file:
         fileData = file.read()
 
-    enc_data = cipher.encrypt(pad(fileData, AES.block_size))
+    encData = cipher.encrypt(pad(fileData, AES.block_size))
 
-    with open(f"{filepath}.enct", "wb") as enc_file:
-        enc_file.write(enc_data)
+    with open(f"{filepath}.enct", "wb") as encFile:
+        encFile.write(encData)
 
     return
