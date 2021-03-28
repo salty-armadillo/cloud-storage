@@ -37,7 +37,8 @@ python server.py
 | /download | GET | Download file by given filename | String : filename, String: location, String: keypath | {} |
 | /upload | POST | Upload file | String : filename, String: keypath or keylocation | {} |
 | /filenames | GET | Get list of all files currently uploaded | | Array : List of filenames |
-| /file | DELETE | Delete file from cloud storage | String: filename | |
+| /file | DELETE | Delete file from cloud storage | String: filename | {} |
+| /user/create | POST | Creates a new user | { String: username, String: email, String: password } | {} |
 
 ---
 
@@ -55,6 +56,17 @@ One of the key features of the application is the encryption of all files prior 
 
 A lot of thought and research went into the key storage aspect of this design despite ultimately going with leaving it up to the user (like an SSH key). Similar to the TLS Encryption this was primarily to do with my own technical limitations. I had thought that I could possibly utilise a private-public key concept or secure storage in a RDS database but these are all options I will have to explore more thoroughly if given more time and capacity.
 
+### Passwords
+When creating a new user, the application does a number of checks in-line with the <strong>NIST Password Guidelines</strong>. This includes:
+* Comparing the password against a password dictionary containing 14 million+ passwords - obtained from the RockYou data breach.
+* Enforcing a minimum password length of 8
+* Enforcing a maximum password length of 64
+
+The password is then hashed with the <strong>bcrypt</strong> algorithm using the brcypt Python module and only the password hash is stored in the database. The algorithm was developed specifically for password hashing so includes a built-in salt and is considering a "slow-algorithm" perfect for preventing brute-force attacks.
+
+These are standard security measures when handling passwords. Some other strong strategies which I found in my research and considered implementing (althought I ultimately did not - due to a combination of skill and time):
+* Creating a mini module for generating permutations of common passwords and adding this to the password dictionary for comparison
+* Adding a 2FA stage with either email or SMS authentication
 
 ---
 
@@ -62,5 +74,7 @@ A lot of thought and research went into the key storage aspect of this design de
 * Flask documentation: https://flask.palletsprojects.com/en/1.1.x/
 * PyCryptodome AES: https://pycryptodome.readthedocs.io/en/latest/src/cipher/aes.html
 * Hashing passwords with bcrypt: https://heynode.com/blog/2020-04/salt-and-hash-passwords-bcrypt
+* Understanding bcrypt: https://auth0.com/blog/hashing-in-action-understanding-bcrypt/
 * Have I been Pwned - Pwned Passwords: https://haveibeenpwned.com/Passwords
+* NIST Password Guidelines: https://auth0.com/blog/dont-pass-on-the-new-nist-password-guidelines/
 
