@@ -11,3 +11,9 @@ def fetch_filenames(bucket):
         files.append(file.key)
     
     return files
+
+def remove_file(bucket, filename):
+    '''Removes file from given bucket'''
+    s3.Object(bucket, filename).delete()
+
+    return
