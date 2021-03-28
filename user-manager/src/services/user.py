@@ -13,7 +13,7 @@ def check_password_dictionary(password):
 
     with open(filepath, 'r', encoding='utf-8') as file:
         for p in file:
-            if password.upper() == p.upper():
+            if password.upper() == p.strip().upper():
                 raise BadRequest("Given password is too common. Please try again.")
 
     return
@@ -41,8 +41,6 @@ def add_user(username, email, password):
         "email": email,
         "password": passwordHash.decode('utf8')
     }
-
-    print(payload)
 
     createUserResp = requests.post(
         f"{CLOUD_BASE_ENDPOINT}/user/create",
