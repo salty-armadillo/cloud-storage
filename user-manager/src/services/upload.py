@@ -15,7 +15,7 @@ CLOUD_BASE_ENDPOINT = config.CLOUD_BASE_ENDPOINT
 def post_file(filepath, keypath, keylocation):
     '''Gets pre-signed url from the cloud and uploads file'''
 
-    filename = filepath.split("\\")[-1]
+    filename = filepath.split("/")[-1]
 
     presignedResponse = requests.post(
             f"{CLOUD_BASE_ENDPOINT}/upload?filename={filename}"
@@ -46,7 +46,7 @@ def encrypt_file(filepath, keypath, keylocation):
         key = get_random_bytes(16)
         cipher = AES.new(key, AES.MODE_CBC)
         iv = b64encode(cipher.iv).decode('utf-8')
-        with open(f"{keylocation}\key.json", "w") as f:
+        with open(f"{keylocation}/key.json", "w") as f:
             json.dump({ "key": b64encode(key).decode('utf-8'), "iv": iv }, f)
     else:
         with open(keypath, 'r') as keyFile:

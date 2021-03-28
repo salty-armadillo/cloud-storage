@@ -8,8 +8,9 @@ DOWNLOAD = Blueprint('download', __name__)
 @DOWNLOAD.route('/download', methods=['GET'])
 def download_file():
     '''Download file given filename'''
-    filename = request.args.get("filename")
-    location = request.args.get("location")
-    keypath = request.args.get("keypath")
+    payload = request.get_json(force=True)
+    filename = payload.get("filename")
+    location = payload.get("location")
+    keypath = payload.get("keypath")
     get_file(filename, location, keypath)
     return json.dumps({})

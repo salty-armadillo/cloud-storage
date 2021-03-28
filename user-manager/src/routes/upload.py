@@ -8,8 +8,9 @@ UPLOAD = Blueprint('upload', __name__)
 @UPLOAD.route('/upload', methods=['POST'])
 def upload_file():
     '''Upload file given filename'''
-    filepath = request.args.get("filepath")
-    keypath = request.args.get("keypath")
-    keylocation = request.args.get("keylocation")
+    payload = request.get_json()
+    filepath = payload.get("filepath")
+    keylocation = payload.get("keylocation")
+    keypath = payload.get("keypath")
     post_file(filepath, keypath, keylocation)
     return json.dumps({})
