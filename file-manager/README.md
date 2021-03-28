@@ -44,4 +44,4 @@ python server.py
 * AWS pre-signed URL - https://docs.aws.amazon.com/AmazonS3/latest/userguide/ShareObjectPreSignedURL.html
 * boto3 pre-signed URL - https://boto3.amazonaws.com/v1/documentation/api/latest/guide/s3-presigned-urls.html
 * Running AWS Lambda in a VPC: https://gist.github.com/reggi/dc5f2620b7b4f515e68e46255ac042a7
-
+* Protecting database queries against SQLi: https://realpython.com/prevent-python-sql-injection/#using-query-parameters-in-sql
