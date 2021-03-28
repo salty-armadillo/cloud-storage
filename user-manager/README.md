@@ -37,6 +37,7 @@ python server.py
 | /download | GET | Download file by given filename | String : filename, String: location, String: keypath | {} |
 | /upload | POST | Upload file | String : filename, String: keypath or keylocation | {} |
 | /filenames | GET | Get list of all files currently uploaded | | Array : List of filenames |
+| /file | DELETE | Delete file from cloud storage | String: filename | |
 
 ---
 
