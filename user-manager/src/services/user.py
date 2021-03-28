@@ -51,3 +51,16 @@ def add_user(username, email, password):
         raise InternalServerError(createUserResp.json()["description"])
 
     return
+
+def get_user(username):
+    '''Retrieve user details'''
+    userResp = requests.get(
+        f"{CLOUD_BASE_ENDPOINT}/user/details?username={username}"
+    )
+
+    if userResp.status_code != 200:
+        raise InternalServerError(userResp.json()["description"])
+
+    details = userResp.json()
+
+    return details   

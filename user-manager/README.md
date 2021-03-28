@@ -39,6 +39,7 @@ python server.py
 | /filenames | GET | Get list of all files currently uploaded | | Array : List of filenames |
 | /file | DELETE | Delete file from cloud storage | String: filename | {} |
 | /user/create | POST | Creates a new user | { String: username, String: email, String: password } | {} |
+| /user/details | GET | Get user details | String: username | Object: user details |
 
 ---
 

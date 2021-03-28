@@ -1,6 +1,6 @@
 import json
 from flask import Blueprint, request
-from services.user import add_user
+from services.user import add_user, get_user
 
 USER = Blueprint('user', __name__)
 
@@ -15,4 +15,11 @@ def create_user():
     add_user(username, email, password)
 
     return json.dumps({})
+
+@USER.route('/details', methods=['GET'])
+def get_user_details():
+    '''Get user details'''
+    username = request.args.get("username")
+    details = get_user(username)
+    return json.dumps(details)
 
