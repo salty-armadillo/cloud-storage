@@ -2,12 +2,14 @@ import sys
 from flask import Flask
 from flask_cors import CORS
 from json import dumps
-
 from werkzeug.exceptions import HTTPException
+
 from routes.download import DOWNLOAD
 from routes.upload import UPLOAD
 from routes.base import BASE
 from routes.user import USER
+
+from services.security import gen_rsa_pair
 
 APP = Flask(__name__)
 CORS(APP)
@@ -31,6 +33,9 @@ APP.register_blueprint(DOWNLOAD)
 APP.register_blueprint(UPLOAD)
 APP.register_blueprint(BASE)
 APP.register_blueprint(USER, url_prefix='/user')
+
+gen_rsa_pair()
+
 
 if __name__ == "__main__":
     APP.run(port=(int(sys.argv[1]) if len(sys.argv) == 2 else 8081), debug=True, ssl_context='adhoc')
