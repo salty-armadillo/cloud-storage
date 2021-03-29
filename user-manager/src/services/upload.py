@@ -30,7 +30,11 @@ def post_file(filepath, keypath, keylocation):
 
     with open(f"{filepath}.enct", 'rb') as f:
         files = {'file': (filename, f)}
-        uploadResponse = requests.post(presignedResponsePayload['url'], data=presignedResponsePayload['fields'], files=files)
+        uploadResponse = requests.post(
+            presignedResponsePayload['url'],
+            data=presignedResponsePayload['fields'],
+            files=files
+        )
     
     if uploadResponse.status_code != 204:
         raise InternalServerError("An error has occurred. Could not upload file to the cloud.")

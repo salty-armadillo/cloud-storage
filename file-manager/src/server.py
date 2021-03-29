@@ -8,6 +8,7 @@ from routes.download import DOWNLOAD
 from routes.upload import UPLOAD
 from routes.base import BASE
 from routes.user import USER
+from routes.security import SECURITY
 
 APP = Flask(__name__)
 CORS(APP)
@@ -31,6 +32,7 @@ APP.register_blueprint(DOWNLOAD)
 APP.register_blueprint(UPLOAD)
 APP.register_blueprint(BASE)
 APP.register_blueprint(USER, url_prefix='/user')
+APP.register_blueprint(SECURITY)
 
 if __name__ == "__main__":
     APP.run(port=(int(sys.argv[1]) if len(sys.argv) == 2 else 8080), debug=True)

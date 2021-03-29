@@ -78,4 +78,5 @@ These are standard security measures when handling passwords. Some other strong 
 * Understanding bcrypt: https://auth0.com/blog/hashing-in-action-understanding-bcrypt/
 * Have I been Pwned - Pwned Passwords: https://haveibeenpwned.com/Passwords
 * NIST Password Guidelines: https://auth0.com/blog/dont-pass-on-the-new-nist-password-guidelines/
+* JWT validation: https://medium.com/dataseries/public-claims-and-how-to-validate-a-jwt-1d6c81823826
 
