@@ -17,3 +17,4 @@ urllib3==1.26.4
 Werkzeug==0.16.1
 pyOpenSSL==20.0.1
 bcrypt==3.2.0
+pyjwt==2.0.1

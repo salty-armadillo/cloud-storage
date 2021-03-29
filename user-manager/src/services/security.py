@@ -5,6 +5,7 @@ functionality of the application
 
 import os
 import requests
+import jwt
 from Crypto.PublicKey import RSA
 import config
 
@@ -65,3 +66,21 @@ def cleanup_rsa_pair():
         os.remove(publicKeyPath)
 
     return
+
+def encode_jwt_token(username):
+    '''Generates a JWT token with the username as the payload'''
+    dirPath = os.path.dirname(__file__)
+    privateKeyPath = os.path.join(dirPath, '../resources/privateRSAKey.pem')
+
+    with open(privateKeyPath, "rb") as f:
+        privKey = f.read()
+
+    token = jwt.encode(
+        {
+            "username": username
+        },
+        privKey,
+        algorithm="RS256"
+    )
+
+    return token
