@@ -1,12 +1,13 @@
 import os
 import jwt
 from werkzeug.exceptions import Unauthorized
+import pathlib
 import config
 
 def save_public_key(file):
     '''Saves a given private key for a new local application'''
-    dirPath = os.path.dirname(__file__)
-    keyDirPath = os.path.join(dirPath, "../resources/keys/")
+    pathlib.Path("/tmp/keys").mkdir(parents=True, exist_ok=True) 
+    keyDirPath = "/tmp/keys"
 
     file.filename = f"PublicKey-{config.PUBLIC_KEY_COUNTER}.pem"
     file.save(os.path.join(keyDirPath, file.filename))
@@ -17,8 +18,7 @@ def save_public_key(file):
 
 def remove_public_key(filename):
     '''Removes the given public key from the keys folder'''
-    dirPath = os.path.dirname(__file__)
-    keyDirPath = os.path.join(dirPath, "../resources/keys/")
+    keyDirPath = "/tmp/keys"
 
     filepath = os.path.join(keyDirPath, filename)
 
@@ -29,8 +29,7 @@ def remove_public_key(filename):
 
 def decode_jwt_token(token, keyFileName):
     '''Verifies a JWT Token and returns the username'''
-    dirPath = os.path.dirname(__file__)
-    keyPath = os.path.join(dirPath, f"../resources/keys/{keyFileName}")
+    keyPath = f"/tmp/keys/{keyFileName}"
 
     with open(keyPath, "rb") as f:
         keyData = f.read()
