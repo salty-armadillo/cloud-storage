@@ -2,6 +2,7 @@ import os
 import jwt
 from werkzeug.exceptions import Unauthorized
 import pathlib
+import re
 import config
 
 def save_public_key(file):
@@ -9,10 +10,11 @@ def save_public_key(file):
     pathlib.Path("/tmp/keys").mkdir(parents=True, exist_ok=True) 
     keyDirPath = "/tmp/keys"
 
-    file.filename = f"PublicKey-{config.PUBLIC_KEY_COUNTER}.pem"
-    file.save(os.path.join(keyDirPath, file.filename))
+    existingKeys = [ f for f in os.listdir(keyDirPath) if f.endswith(".pem")]
+    nextKey = int(re.split("[-.]", existingKeys[-1])[1]) + 1 if len(existingKeys) > 0 else 0
 
-    config.increment_public_key()
+    file.filename = f"PublicKey-{nextKey}.pem"
+    file.save(os.path.join(keyDirPath, file.filename))
 
     return file.filename
 
