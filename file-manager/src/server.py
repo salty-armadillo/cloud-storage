@@ -30,7 +30,7 @@ def default_handler(err):
 
 @APP.before_request
 def extract_auth():
-    if request.endpoint not in ["user.create_user", "user.get_user_details", "security.upload_rsa_key"]:
+    if request.endpoint not in ["user.create_user", "user.get_user_details", "security.upload_rsa_key", "base.base"]:
         headers = request.headers
         g.username = decode_jwt_token(headers.get("Authorization"), headers.get("key"))
 
