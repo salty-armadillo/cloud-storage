@@ -38,7 +38,6 @@ def decrypt_file(fileData, filePath, keypath):
         keyData = json.load(keyFile)
         key = b64decode(keyData['key'])
         iv = b64decode(keyData['iv'])
-        print(key, iv)
     cipher = AES.new(key, AES.MODE_CBC, iv)
 
     try:

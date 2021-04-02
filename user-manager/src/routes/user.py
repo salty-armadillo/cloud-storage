@@ -1,6 +1,6 @@
 import json
 from flask import Blueprint, request
-from services.user import add_user, get_user, login_user
+from services.user import add_user, get_user, login_user, logout_user
 
 USER = Blueprint('user', __name__)
 
@@ -34,3 +34,9 @@ def login():
         "publicKeyID": publicKeyID,
         "token": token
     })
+
+@USER.route('/logout', methods=['POST'])
+def logout():
+    '''Logs out user'''
+    logout_user()
+    return json.dumps({})

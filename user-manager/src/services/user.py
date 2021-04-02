@@ -1,4 +1,5 @@
 import os
+from flask import g
 import requests
 from werkzeug.exceptions import InternalServerError, BadRequest, Unauthorized
 import bcrypt
@@ -66,8 +67,6 @@ def get_user(username):
 
     return details
 
-    # atexit.register(cleanup_rsa_pair)
-
 def login_user(username, password):
     '''Logs in a user'''
 
@@ -83,3 +82,10 @@ def login_user(username, password):
     token = encode_jwt_token(username)
 
     return (publicKeyID, token)
+
+def logout_user():
+    '''Logs out user and cleans up keys'''
+    key = g.headers.get("key")
+    cleanup_rsa_pair(key)
+
+    return

@@ -48,10 +48,10 @@ def upload_public_key():
 
     return keyFileName
 
-def cleanup_rsa_pair():
+def cleanup_rsa_pair(key):
     '''Cleans up the RSA key pair upon logout - both local and on the remote'''
     requests.delete(
-        f"{CLOUD_BASE_ENDPOINT}/rsa/delete?keyFileName={config.PUBLIC_KEY_ID}"
+        f"{CLOUD_BASE_ENDPOINT}/rsa/delete?keyFileName={key}"
     )
 
     dirPath = os.path.dirname(__file__)
