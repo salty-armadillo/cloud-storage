@@ -1,6 +1,7 @@
 # Upload demo code referenced from - https://boto3.amazonaws.com/v1/documentation/api/latest/guide/s3-presigned-urls.html
 
 import os
+from flask import g
 import requests
 from werkzeug.exceptions import InternalServerError
 import json
@@ -18,7 +19,8 @@ def post_file(filepath, keypath, keylocation):
     filename = filepath.split("/")[-1]
 
     presignedResponse = requests.post(
-            f"{CLOUD_BASE_ENDPOINT}/upload?filename={filename}"
+            f"{CLOUD_BASE_ENDPOINT}/upload?filename={filename}",
+            headers=g.headers
         )
 
     if presignedResponse.status_code != 200:

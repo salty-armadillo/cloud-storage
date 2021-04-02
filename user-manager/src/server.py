@@ -1,5 +1,5 @@
 import sys
-from flask import Flask
+from flask import Flask, request, g
 from flask_cors import CORS
 from json import dumps
 from werkzeug.exceptions import HTTPException
@@ -24,6 +24,11 @@ def default_handler(err):
     })
     response.content_type = "application/json"
     return response
+
+@APP.before_request
+def extract_auth():
+    if request.endpoint not in ["user.create_user", "user.login", "base.base"]:
+        g.headers = request.headers
 
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(HTTPException, default_handler)

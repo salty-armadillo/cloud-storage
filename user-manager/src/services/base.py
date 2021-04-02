@@ -1,20 +1,15 @@
+from flask import g
 import requests
 from werkzeug.exceptions import InternalServerError
 import config
 
 CLOUD_BASE_ENDPOINT = config.CLOUD_BASE_ENDPOINT
 
-def fetch_filenames(token, publicKeyID):
+def fetch_filenames():
     '''Returns list of all files'''
-
-    headers = {
-        "Authorization": token,
-        "key": publicKeyID
-    }
-
     filenamesResponse = requests.get(
         f"{CLOUD_BASE_ENDPOINT}/filenames",
-        headers=headers
+        headers=g.headers
     )
 
     if filenamesResponse.status_code != 200:
@@ -27,7 +22,8 @@ def fetch_filenames(token, publicKeyID):
 def remove_file(filename):
     '''Removes file from cloud storage'''
     removeFileResp = requests.delete(
-        f"{CLOUD_BASE_ENDPOINT}/file?filename={filename}"
+        f"{CLOUD_BASE_ENDPOINT}/file?filename={filename}",
+        headers=g.headers
     )
 
     if removeFileResp.status_code != 200:

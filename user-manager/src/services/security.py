@@ -49,7 +49,7 @@ def upload_public_key():
     return keyFileName
 
 def cleanup_rsa_pair():
-    '''Cleans up the RSA key pair upon application shutdown - both local and on the remote'''
+    '''Cleans up the RSA key pair upon logout - both local and on the remote'''
     requests.delete(
         f"{CLOUD_BASE_ENDPOINT}/rsa/delete?keyFileName={config.PUBLIC_KEY_ID}"
     )

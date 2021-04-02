@@ -1,4 +1,5 @@
 import os
+from flask import g
 import requests
 import json
 from werkzeug.exceptions import InternalServerError, NotFound
@@ -12,7 +13,8 @@ CLOUD_BASE_ENDPOINT = config.CLOUD_BASE_ENDPOINT
 def get_file(filename, location, keypath):
     '''Gets pre-signed URL from the cloud and downloads the file'''
     presignedResponse = requests.get(
-        f"{CLOUD_BASE_ENDPOINT}/download?filename={filename}"
+        f"{CLOUD_BASE_ENDPOINT}/download?filename={filename}",
+        headers=g.headers
     )
 
     if presignedResponse.status_code != 200:
@@ -21,18 +23,12 @@ def get_file(filename, location, keypath):
     presignedUrl = presignedResponse.text
 
     downloadResponse = requests.get(presignedUrl)
-    wholeFilePath = f"{location}\{filename}.enct"
+    filePath = f"{location}\{filename}"
 
-    open(wholeFilePath, "wb").write(downloadResponse.content)
-
-    decrypt_file(wholeFilePath, keypath)
-
-    if os.path.exists(wholeFilePath):
-        os.remove(wholeFilePath)
-
+    decrypt_file(downloadResponse.content, filePath, keypath)
     return
 
-def decrypt_file(filepath, keypath):
+def decrypt_file(fileData, filePath, keypath):
     '''Creates a decrypted version of the provided file'''
 
     if keypath is None:
@@ -42,24 +38,15 @@ def decrypt_file(filepath, keypath):
         keyData = json.load(keyFile)
         key = b64decode(keyData['key'])
         iv = b64decode(keyData['iv'])
+        print(key, iv)
     cipher = AES.new(key, AES.MODE_CBC, iv)
 
-    with open(filepath, "rb") as file:
-        encData = file.read()
-
     try:
-        decData = unpad(cipher.decrypt(encData), AES.block_size)
-    except ValueError or KeyError:
-        if os.path.exists(filepath):
-            os.remove(filepath)
+        decData = unpad(cipher.decrypt(fileData), AES.block_size)
+    except:
         raise InternalServerError("Unsuccessful decryption of the file. Please ensure the correct key is provided.")
 
-    if filepath.endswith('.enct'):
-        decFilepath = filepath[:-5]
-    else:
-        decFilepath = filepath
-
-    with open(decFilepath, "wb") as decFile:
+    with open(filePath, "wb") as decFile:
         decFile.write(decData)
     
     return
