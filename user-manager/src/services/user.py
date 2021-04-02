@@ -1,7 +1,8 @@
 import os
 import requests
-from werkzeug.exceptions import InternalServerError, BadRequest
+from werkzeug.exceptions import InternalServerError, BadRequest, Unauthorized
 import bcrypt
+from services.security import encode_jwt_token
 import config
 
 CLOUD_BASE_ENDPOINT = config.CLOUD_BASE_ENDPOINT
@@ -63,4 +64,20 @@ def get_user(username):
 
     details = userResp.json()
 
-    return details   
+    return details
+
+def login_user(username, password):
+    '''Logs in a user'''
+
+    user_details = get_user(username)
+    password_hash = user_details.get("password_hash")
+
+    if not bcrypt.checkpw(password.encode('utf-8'), password_hash.encode('utf-8')):
+        raise Unauthorized("Incorrect password. Please try again.")
+
+    token = encode_jwt_token(username)
+    config.set_token(token)
+
+    print(config.TOKEN)
+
+    return
