@@ -29,6 +29,12 @@ def remove_public_key(filename):
 
 def decode_jwt_token(token, keyFileName):
     '''Verifies a JWT Token and returns the username'''
+    if token is None or keyFileName is None:
+        raise Unauthorized("Unauthorized access. Token was not accepted, please try again.")
+
+    if token.startswith("Bearer "):
+        token = token[len("Bearer "):]
+
     keyPath = f"/tmp/keys/{keyFileName}"
 
     with open(keyPath, "rb") as f:

@@ -29,5 +29,8 @@ def login():
     payload = request.get_json()
     username = payload.get("username")
     password = payload.get("password")
-    login_user(username, password)
-    return json.dumps({})
+    (publicKeyID, token) = login_user(username, password)
+    return json.dumps({
+        "publicKeyID": publicKeyID,
+        "token": token
+    })

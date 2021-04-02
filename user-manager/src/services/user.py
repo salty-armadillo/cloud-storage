@@ -2,7 +2,7 @@ import os
 import requests
 from werkzeug.exceptions import InternalServerError, BadRequest, Unauthorized
 import bcrypt
-from services.security import encode_jwt_token
+from services.security import encode_jwt_token, gen_rsa_pair, upload_public_key, cleanup_rsa_pair
 import config
 
 CLOUD_BASE_ENDPOINT = config.CLOUD_BASE_ENDPOINT
@@ -66,6 +66,8 @@ def get_user(username):
 
     return details
 
+    # atexit.register(cleanup_rsa_pair)
+
 def login_user(username, password):
     '''Logs in a user'''
 
@@ -75,9 +77,9 @@ def login_user(username, password):
     if not bcrypt.checkpw(password.encode('utf-8'), password_hash.encode('utf-8')):
         raise Unauthorized("Incorrect password. Please try again.")
 
+    gen_rsa_pair()
+    publicKeyID = upload_public_key()
+
     token = encode_jwt_token(username)
-    config.set_token(token)
 
-    print(config.TOKEN)
-
-    return
+    return (publicKeyID, token)

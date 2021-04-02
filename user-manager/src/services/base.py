@@ -4,10 +4,17 @@ import config
 
 CLOUD_BASE_ENDPOINT = config.CLOUD_BASE_ENDPOINT
 
-def fetch_filenames():
-    '''Returns list of all files''' 
+def fetch_filenames(token, publicKeyID):
+    '''Returns list of all files'''
+
+    headers = {
+        "Authorization": token,
+        "key": publicKeyID
+    }
+
     filenamesResponse = requests.get(
-        f"{CLOUD_BASE_ENDPOINT}/filenames"
+        f"{CLOUD_BASE_ENDPOINT}/filenames",
+        headers=headers
     )
 
     if filenamesResponse.status_code != 200:

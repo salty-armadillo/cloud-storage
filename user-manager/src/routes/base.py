@@ -11,7 +11,10 @@ def base():
 @BASE.route('/filenames', methods=['GET'])
 def get_filenames():
     '''Get list of all files currently uploaded'''
-    filenames = fetch_filenames()
+    headers = request.headers
+    token = headers.get("Authorization")
+    publicKeyId = headers.get("key")
+    filenames = fetch_filenames(token, publicKeyId)
     return json.dumps(filenames)
 
 @BASE.route('/file', methods=['DELETE'])

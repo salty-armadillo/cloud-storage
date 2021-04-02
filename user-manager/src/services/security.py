@@ -41,13 +41,12 @@ def upload_public_key():
         )
 
     if uploadResponse.status_code != 200:
-        raise Exception("Unable to set up authentication protocol. Shutting down application...")
+        raise Exception("Unable to set up authentication protocol. Please try again...")
+
 
     keyFileName = uploadResponse.json().get("keyFileName")
 
-    config.set_public_key_id(keyFileName)
-
-    return
+    return keyFileName
 
 def cleanup_rsa_pair():
     '''Cleans up the RSA key pair upon application shutdown - both local and on the remote'''
