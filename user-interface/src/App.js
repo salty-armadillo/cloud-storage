@@ -12,7 +12,7 @@ function App({ loggedIn }) {
     return (
         <div className="App">
             <HashRouter>
-                <NavSidebar />
+                { loggedIn && <NavSidebar /> }
                 <Switch>
                     <Route exact path="/">
                         <Redirect to={loggedIn ? "/upload" : "/login"} />
