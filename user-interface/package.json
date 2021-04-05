@@ -1,8 +1,8 @@
 {
   "name": "user-interface",
-  "productName": "user-interface",
+  "productName": "Cloud Storage",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "User interface for Cloud Storage application",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",
@@ -13,8 +13,7 @@
   },
   "keywords": [],
   "author": {
-    "name": "Kaman Chan",
-    "email": "kamanchan27@gmail.com"
+    "name": "Kaman Chan"
   },
   "license": "MIT",
   "config": {
@@ -79,11 +78,14 @@
     "@babel/core": "^7.13.14",
     "@babel/preset-env": "^7.13.12",
     "@babel/preset-react": "^7.13.13",
+    "@material-ui/core": "^4.11.3",
+    "@material-ui/icons": "^4.11.2",
     "babel-loader": "^8.2.2",
     "electron-squirrel-startup": "^1.0.0",
     "i": "^0.3.6",
     "npm": "^7.8.0",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^5.2.0"
   }
 }
