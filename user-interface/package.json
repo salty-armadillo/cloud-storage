@@ -1,19 +1,20 @@
 {
   "name": "user-interface",
-  "productName": "Cloud Storage",
+  "productName": "user-interface",
   "version": "1.0.0",
-  "description": "User Interface for Cloud Storage application",
+  "description": "My Electron application description",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "eslint --ext .ts ."
+    "lint": "echo \"No linting configured\""
   },
   "keywords": [],
   "author": {
-    "name": "kaman"
+    "name": "Kaman Chan",
+    "email": "kamanchan27@gmail.com"
   },
   "license": "MIT",
   "config": {
@@ -51,7 +52,7 @@
               "entryPoints": [
                 {
                   "html": "./src/index.html",
-                  "js": "./src/renderer.ts",
+                  "js": "./src/renderer.js",
                   "name": "main_window"
                 }
               ]
@@ -69,26 +70,20 @@
     "@electron-forge/maker-zip": "^6.0.0-beta.54",
     "@electron-forge/plugin-webpack": "^6.0.0-beta.54",
     "@marshallofsound/webpack-asset-relocator-loader": "^0.5.0",
-    "@types/react": "^17.0.3",
-    "@types/react-dom": "^17.0.3",
-    "@typescript-eslint/eslint-plugin": "^4.20.0",
-    "@typescript-eslint/parser": "^4.20.0",
     "css-loader": "^4.3.0",
     "electron": "12.0.2",
-    "eslint": "^7.23.0",
-    "eslint-plugin-import": "^2.22.1",
-    "fork-ts-checker-webpack-plugin": "^5.2.1",
-    "install": "^0.13.0",
     "node-loader": "^1.0.2",
-    "npm": "^7.8.0",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "style-loader": "^1.3.0",
-    "ts-loader": "^8.1.0",
-    "typescript": "^4.2.3"
+    "style-loader": "^1.3.0"
   },
   "dependencies": {
-    "cacache": "^15.0.6",
-    "electron-squirrel-startup": "^1.0.0"
+    "@babel/core": "^7.13.14",
+    "@babel/preset-env": "^7.13.12",
+    "@babel/preset-react": "^7.13.13",
+    "babel-loader": "^8.2.2",
+    "electron-squirrel-startup": "^1.0.0",
+    "i": "^0.3.6",
+    "npm": "^7.8.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   }
 }
