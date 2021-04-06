@@ -20,3 +20,10 @@ def delete_file():
     filename = request.args.get("filename")
     remove_file(filename)
     return json.dumps({})
+
+@BASE.route('/shutdown', methods=['POST'])
+def shutdown_server():
+    '''Graceful shutdown of the server'''
+    shutdown = request.environ.get('werkzeug.server.shutdown')
+    shutdown()
+    return json.dumps({})
