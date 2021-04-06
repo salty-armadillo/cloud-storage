@@ -1,26 +1,50 @@
 import React from 'react';
 import { HashRouter, Switch, Redirect, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { ThemeProvider } from '@material-ui/styles';
+import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
 
-import { NavSidebar } from './components/NavSidebar';
 import { UploadPage } from './pages/UploadPage';
 import { DownloadPage } from './pages/DownloadPage';
 import { LoginPage } from './pages/LoginPage';
 
-function App({ loggedIn }) {
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            main: "#1fb88b"
+        },
+        secondary: {
+            main: "#f0f0f0"
+        },
+        contrastThreshold: 3,
+    },
+    typography: {
+        fontFamily: [
+            '"Verdana"',
+            'Arial',
+            'sans-serif'
+        ].join(',')
+    }
+})
+
+
+function App() {
 
     return (
         <div className="App">
             <HashRouter>
-                { loggedIn && <NavSidebar /> }
-                <Switch>
-                    <Route exact path="/">
-                        <Redirect to={loggedIn ? "/upload" : "/login"} />
-                    </Route>
-                    <Route path="/upload" component={UploadPage}/>
-                    <Route path="/download" component={DownloadPage}/>
-                    <Route path="/login" component={LoginPage} />
-                </Switch>
+                <ThemeProvider
+                    theme={responsiveFontSizes(theme)}
+                >
+                    <Switch>
+                        <Route exact path="/">
+                            <Redirect to="/login" />
+                        </Route>
+                        <Route path="/upload" component={UploadPage}/>
+                        <Route path="/download" component={DownloadPage}/>
+                        <Route path="/login" component={LoginPage} />
+                    </Switch>
+                </ThemeProvider>
             </HashRouter>
         </div>
     )
