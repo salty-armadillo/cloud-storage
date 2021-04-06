@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
 
+import { NavSidebar } from '../../components/NavSidebar';
+
 const styles = () => ({
 
 })
@@ -17,7 +19,10 @@ export class UploadPage extends React.Component {
 
     render(){
         return (
-            <div>upload</div>
+            <React.Fragment>
+                <NavSidebar />
+                <div>upload</div>
+            </React.Fragment>
         )
     }
 

@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { Link, useLocation } from 'react-router-dom';
 
-import Drawer from '@material-ui/core/Drawer';
+import Paper from '@material-ui/core/Paper';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -12,9 +12,16 @@ import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import ListIcon from '@material-ui/icons/List';
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 
-const styles = () => ({
+const styles = (theme) => ({
     paper: {
-        width: "5em"
+        height: "100vh",
+        width: "5em",
+        float: "left",
+        marginRight: "1em",
+        borderRadius: 0,
+        borderRightStyle: "solid",
+        borderRightWidth: "2px",
+        borderRightColor: theme.palette.secondary.main
     },
     list: {
         margin: "auto 0"
@@ -36,11 +43,9 @@ export class NavSidebar extends React.Component {
         const { classes } = this.props;
 
         return (
-            <Drawer
-                classes={{ paper: classes.paper }}
-                variant="persistent"
-                anchor="left"
-                open={true}
+            <Paper
+                className={classes.paper}
+                elevation={0}
             >
                 <List className={classes.list}>
                     <ListItem button className={classes.listItem} component={Link} to="/upload">
@@ -64,7 +69,7 @@ export class NavSidebar extends React.Component {
                         </ListItemIcon>
                     </ListItem>
                 </List>
-            </Drawer>
+            </Paper>
         )
     }
 
