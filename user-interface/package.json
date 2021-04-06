@@ -84,6 +84,7 @@
     "@material-ui/styles": "^4.11.3",
     "axios": "^0.21.1",
     "babel-loader": "^8.2.2",
+    "clsx": "^1.1.1",
     "electron-squirrel-startup": "^1.0.0",
     "i": "^0.3.6",
     "npm": "^7.8.0",
