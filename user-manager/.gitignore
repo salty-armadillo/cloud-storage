@@ -1,2 +1,6 @@
+build
+dist
 rockyou.txt
 *.pem
+*.pyo
+server.spec
