@@ -4,7 +4,9 @@ This is the local backend connected to the Electron frontend. It also helps to c
 
 ---
 
-## Development startup (Windows)
+## Development (Windows)
+
+## Running
 ```
 cd ./src
 set FLASK_APP=server.py
@@ -28,6 +30,22 @@ set FLASK_APP=server.py
 python server.py
 
 ```
+
+## Packaging
+1. Run the below command
+    ```
+    cd ./src
+    pyinstaller -w -F --add-data "resources;resources" server.py
+    ```
+2. Go to the generated `server.spec` file and:
+    1. Remove the `[('v', None, 'OPTION')]` line
+    2. Change the `debug=True` line to `debug=False`
+3. Run the below command to build from spec file
+    ```
+    cd ./src
+    pyinstaller -w -F --add-data "resources;resources" server.spec
+    ```
+4. `server.exe` file should be available in the `./dist` directory now
 ---
 
 ## Endpoints
