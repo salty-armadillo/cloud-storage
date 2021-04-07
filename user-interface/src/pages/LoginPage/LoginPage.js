@@ -18,7 +18,7 @@ const styles = (theme) => ({
     loginPanel: {
         height: "25em",
         width: "50%",
-        backgroundColor: theme.palette.secondary.main,
+        backgroundColor: theme.palette.secondary.light,
         position: "absolute",
         top: 0,
         bottom: 0,
