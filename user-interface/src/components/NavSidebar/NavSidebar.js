@@ -15,17 +15,17 @@ import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 
 const styles = (theme) => ({
     paper: {
-        height: "100vh",
+        height: "90vh",
         width: "5em",
         float: "left",
-        marginRight: "1em",
+        marginRight: "1.5em",
         borderRadius: 0,
         borderRightStyle: "solid",
         borderRightWidth: "2px",
         borderRightColor: theme.palette.secondary.main
     },
     list: {
-        margin: "auto 0"
+        marginTop: "7em"
     },
     listItem: {
         margin: "1em auto"
