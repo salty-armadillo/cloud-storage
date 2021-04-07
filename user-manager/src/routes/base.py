@@ -21,7 +21,7 @@ def delete_file():
     remove_file(filename)
     return json.dumps({})
 
-@BASE.route('/shutdown', methods=['POST'])
+@BASE.route('/shutdown', methods=['GET'])
 def shutdown_server():
     '''Graceful shutdown of the server'''
     shutdown = request.environ.get('werkzeug.server.shutdown')

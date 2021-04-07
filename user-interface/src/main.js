@@ -3,6 +3,16 @@ const path = require('path');
 
 app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
 
+// Start up the Flask executable
+let flaskEXE = path.join(__dirname, 'server.exe');
+let flaskProcess = require('child_process').execFile(flaskEXE, [8081], { detached: true })
+
+if (flaskProcess != null) {
+  console.log("flask started! PID: ", flaskProcess.pid);
+} else {
+  console.log("uh oh");
+}
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
   app.quit();
@@ -37,6 +47,36 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
+app.on('before-quit', (e) => {
+  e.preventDefault();
+
+  const https = require('https')
+  const options = {
+    hostname: '127.0.0.1',
+    port: 8081,
+    path: '/shutdown',
+    method: 'GET',
+    rejectUnauthorized: false
+  }
+
+  const req = https.request(options, res => {
+    console.log(`Flask server shutdown statusCode: ${res.statusCode}`)
+
+    res.on('data', (d) => {
+      process.stdout.write(d);
+    })
+
+    app.exit();
+  })
+
+  req.on('error', error => {
+    console.error(error)
+  })
+
+  req.end()
+
+})
 
 app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
