@@ -4,10 +4,35 @@ This is the frontend of the application and is connected to the local Flask back
 
 ---
 
-## Development startup (Windows)
+## Development (Windows)
+
+### Running
 ```
 cd .
 rm -rf node_modules
 npm install
 npm start
 ```
+
+### Packaging
+```
++-- user-interface
+    +-- out
+        +-- Cloud Storage
+            +-- CloudStorage.exe
+    +-- src
+        +-- server.exe
+        .
+        .
+        .
+
+________________
+
+cp <location of generated server.exe> ./src/server.exe
+cd ./src
+npm run make
+```
+Note: The distributable will be available in the `out/` directory.
+
+---
+

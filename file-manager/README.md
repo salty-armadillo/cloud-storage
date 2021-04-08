@@ -40,6 +40,8 @@ python server.py
 | /file | DELETE | Delete file from S3 | String: filename | |
 | /user/create | POST | Creates a new user | String: username, String: email, String: password | |
 | /user/details | GET | Retrieves user details | String: username | Object: user details |
+| /rsa/upload | POST | Accepts a public RSA key | File: public RSA key | |
+| /rsa/delete | DELETE | Removes a public RSA key | String: key ID | |
 
 ---
 

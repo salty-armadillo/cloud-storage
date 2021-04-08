@@ -56,8 +56,11 @@ python server.py
 | /upload | POST | Upload file | String : filename, String: keypath or keylocation | {} |
 | /filenames | GET | Get list of all files currently uploaded | | Array : List of filenames |
 | /file | DELETE | Delete file from cloud storage | String: filename | {} |
+| /shutdown | GET | Shutdown the server - to be used by the frontend cleanup activity | | {} |
 | /user/create | POST | Creates a new user | { String: username, String: email, String: password } | {} |
 | /user/details | GET | Get user details | String: username | Object: user details |
+| /user/login | POST | Login a user | String: username, String: password | Object: Token and key ID |
+| /user/logout | POST | Logout the user | | {} |
 
 ---
 
@@ -86,6 +89,13 @@ The password is then hashed with the <strong>bcrypt</strong> algorithm using the
 These are standard security measures when handling passwords. Some other strong strategies which I found in my research and considered implementing (althought I ultimately did not - due to a combination of skill and time):
 * Creating a mini module for generating permutations of common passwords and adding this to the password dictionary for comparison
 * Adding a 2FA stage with either email or SMS authentication
+
+### JWT Integration
+The JWT integration is utilising the pyJWT package and the encryption is done with a private RSA key. The key pair is generated during login and the public key is sent off to the server instance. This public key will then be used for all subsequence authentications. The payload for the token is just the userID - i.e. `{ userID: "user1" }` - and this structure is used to verify that the token is as expected.
+
+There are some issues with this security protocol - namely the setting up process with the public RSA key. This is not as secure given that the unauthenticated client is sending a key that is automatically accepted by the server. However, I do believe that this issue and the solution as a whole is acceptable given the scale of the project. It can be assumed that the set up procedure for the applications is less prone to attacks or risks.
+
+Another question is the scalability of this solution. The lambda instance that the server is running on only has 50MB of `/tmp` storage to store the public keys.The ID of the key also has to be sent with each HTTPS call.
 
 ---
 
