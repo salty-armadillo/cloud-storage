@@ -5,7 +5,7 @@ from services.download import get_file
 
 DOWNLOAD = Blueprint('download', __name__)
 
-@DOWNLOAD.route('/download', methods=['GET'])
+@DOWNLOAD.route('/download', methods=['POST'])
 def download_file():
     '''Download file given filename'''
     payload = request.get_json(force=True)
