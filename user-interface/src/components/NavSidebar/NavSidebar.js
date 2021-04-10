@@ -84,7 +84,8 @@ export function NavSidebar(props) {
                             [classes.selectedListItem]: route === "/activities"
                         })
                     } 
-                    className={classes.listItem}
+                    component={Link}
+                    to="/activities"
                 >
                     <ListItemIcon>
                         <ListIcon fontSize={"large"}/>
@@ -97,7 +98,8 @@ export function NavSidebar(props) {
                             [classes.selectedListItem]: route === "/files"
                         })
                     } 
-                    className={classes.listItem}
+                   component={Link}
+                   to="/files"
                 >
                     <ListItemIcon>
                         <InsertDriveFileIcon fontSize={"large"}/>
