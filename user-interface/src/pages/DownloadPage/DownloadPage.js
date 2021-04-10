@@ -46,8 +46,6 @@ const styles = (theme) => ({
         padding: "1em",
         boxSizing: "border-box"
     },
-    table: {
-    },
     tableHeading: {
         color: theme.palette.primary.main,
         fontWeight: "bold"
@@ -134,7 +132,6 @@ export class DownloadPage extends React.Component {
     }
 
     handleFileSelect = (e) => {
-        console.log(e.target.value)
         this.setState({ selectedFile: e.target.value });
     }
 
