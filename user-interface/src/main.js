@@ -1,5 +1,38 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+const Store = require('electron-store');
+
+const store = new Store();
+
+// Initial store state
+store.set("loggedIn", false);
+store.set("userId", "");
+store.set("token", "");
+store.set("keyId", "");
+
+ipcMain.on("login", (_, payload) => {
+  store.set("loggedIn", true);
+  store.set("userId", payload.userId);
+  store.set("token", payload.token);
+  store.set("keyId", payload.keyId);
+})
+
+ipcMain.on("logout", () => {
+  store.set("loggedIn", false);
+  store.set("userId", "");
+  store.set("token", "");
+  store.set("keyId", "");
+})
+
+ipcMain.on("getDetails", (e) => {
+  console.log(store);
+  e.returnValue = {
+    loggedIn: store.get("loggedIn"),
+    userId: store.get("userId"),
+    token: store.get("token"),
+    keyId: store.get("keyId")
+  }
+})
 
 app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
 
@@ -23,6 +56,11 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true
+    }
   });
 
   // and load the index.html of the app.
