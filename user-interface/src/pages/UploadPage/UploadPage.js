@@ -13,6 +13,7 @@ import Button from '@material-ui/core/Button';
 import InputBase from '@material-ui/core/InputBase';
 import Chip from '@material-ui/core/Chip';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Snackbar from '@material-ui/core/Snackbar';
 
 import { NavSidebar } from '../../components/NavSidebar';
 import { DragDropBox } from '../../components/DragDropBox';
@@ -66,6 +67,9 @@ const styles = (theme) => ({
         marginLeft: "auto",
         marginRight: "0",
         display: "block"
+    },
+    successAlert: {
+        backgroundColor: theme.palette.success.main
     }
 })
 
@@ -80,7 +84,8 @@ export class UploadPage extends React.Component {
             keyPath: "",
             keyName: "",
             isFileUploading: false,
-            submitError: ""
+            submitError: "",
+            submitSuccess: false
         }
     }
 
@@ -147,7 +152,8 @@ export class UploadPage extends React.Component {
                         filepath: "",
                         keyPath: "",
                         keyName: "",
-                        isFileUploading: false
+                        isFileUploading: false,
+                        submitSuccess: true
                     })
                 })
                 .catch((error) => {
@@ -163,10 +169,19 @@ export class UploadPage extends React.Component {
 
     render(){
         const { classes } = this.props;
-        const { filepath, generateNewKey, keyName, submitError, isFileUploading } = this.state;
+        const { filepath, generateNewKey, keyName, submitError, isFileUploading, submitSuccess } = this.state;
 
         return (
             <React.Fragment>
+                <Snackbar
+                    ContentProps={{ classes: { root: classes.successAlert }}}
+                    anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                    open={submitSuccess}
+                    onClose={() => { this.setState({ submitSuccess: false }) }}
+                    autoHideDuration={2000}
+                    message="File uploaded successfully!"
+                    key='file-upload-alert'
+                />
                 <NavSidebar />
                 <Container className={classes.pageContainer}>
                     <Box className={classes.header}>
