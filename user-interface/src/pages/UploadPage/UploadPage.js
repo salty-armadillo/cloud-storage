@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { ipcRenderer } from 'electron';
 
 import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -119,7 +119,6 @@ export class UploadPage extends React.Component {
     }
 
     onUploadFile = () => {
-        const { token, tokenKey } = this.props;
         const { filepath, keyPath, generateNewKey } = this.state;
 
         if (!filepath.trim()) {
@@ -129,14 +128,16 @@ export class UploadPage extends React.Component {
         } else {
             this.setState({ isFileUploading: true, submitError: "" });
 
+            const wholeState = ipcRenderer.sendSync("getDetails");
+
             const url = `${SERVER_ENDPOINT}/upload`;
             const headers = {
-                "Authorization": token,
-                "key": tokenKey
+                "Authorization": wholeState.token,
+                "key": wholeState.keyId
             }
             const payload = {
-                filepath: filepath,
-                [generateNewKey ? "keylocation" : "keypath"]: keyPath
+                filepath: filepath.replaceAll("\\", "/"),
+                [generateNewKey ? "keylocation" : "keypath"]: keyPath.replaceAll("\\", "/")
             }
 
             axios
@@ -161,10 +162,8 @@ export class UploadPage extends React.Component {
     }
 
     render(){
-        const { classes, wholeState } = this.props;
+        const { classes } = this.props;
         const { filepath, generateNewKey, keyName, submitError, isFileUploading } = this.state;
-
-        console.log(wholeState)
 
         return (
             <React.Fragment>
@@ -247,12 +246,4 @@ UploadPage.propTypes = {
     classes: PropTypes.object.isRequired
 }
 
-function mapStateToProps(state) {
-    return {
-        wholeState: state,
-        token: state.token,
-        tokenKey: state.keyID,
-    };
-}
-
-export default connect(mapStateToProps)(withStyles(styles)(UploadPage));
+export default withStyles(styles)(UploadPage);

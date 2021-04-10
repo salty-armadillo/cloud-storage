@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { ipcRenderer } from 'electron';
 import axios from 'axios';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -115,6 +116,11 @@ export class LoginPage extends React.Component {
                         const data = response.data;
                         const keyID = data && data.publicKeyID;
                         const token = data && data.token;
+                        ipcRenderer.send("login", {
+                            userId: username,
+                            token: token,
+                            keyId: keyID
+                        })
                         login(username, token, keyID);
                         history.push("/upload");
                     })
