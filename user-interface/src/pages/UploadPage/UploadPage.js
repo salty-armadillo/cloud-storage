@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
+import axios from 'axios';
 
 import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -19,7 +20,6 @@ import { NavSidebar } from '../../components/NavSidebar';
 import { DragDropBox } from '../../components/DragDropBox';
 
 import { SERVER_ENDPOINT } from '../../constants';
-import axios from 'axios';
 
 const styles = (theme) => ({
     pageContainer: {
@@ -107,8 +107,15 @@ export class UploadPage extends React.Component {
 
     onKeySelect = (e) => {
         if (e.target.files.length > 0) {
-            const keyPath = e.target.files[0].path;
-            const keyName = keyPath.split("\\")[keyPath.split("\\").length - 1];
+            let keyPath = "";
+            let keyName = "";
+            if (this.state.generateNewKey) {
+                keyPath = e.target.files[0].path.split("\\").split(0, -1).join("\\");
+                keyName = keyPath.split("\\")[keyPath.split("\\").length - 1];
+            } else {
+                keyPath = e.target.files[0].path;
+                keyName = keyPath.split("\\")[keyPath.split("\\").length - 1];
+            }
             this.setState({
                 keyPath: keyPath,
                 keyName: keyName
