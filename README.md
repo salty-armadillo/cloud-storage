@@ -11,5 +11,4 @@ Secure cloud storage application being written for a third-year university cours
 * User can drag and drop file in the user interface to send it to storage
 * User can retrieve any files they have previously stored
 * All files in the cloud are encrypted
-* Email verification code is sent out for all logins
 * Access to storage should be restricted to the other service only
