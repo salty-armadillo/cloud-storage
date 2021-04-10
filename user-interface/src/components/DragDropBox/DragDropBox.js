@@ -137,7 +137,7 @@ export class DragDropBox extends React.Component {
             >
                 { !filepath || isFileOver
                     ? (
-                        <span style={{ display: "flex" }}>
+                        <React.Fragment>
                             <Typography 
                                 className={classes.dragDropText}
                                 variant={'subtitle1'}
@@ -154,7 +154,7 @@ export class DragDropBox extends React.Component {
                             >
                                 files to upload
                             </Typography>
-                        </span>
+                        </React.Fragment>
                     ) : (
                         <Paper className={classes.fileBox}>
                             <Box className={classes.iconBox}>
