@@ -17,7 +17,8 @@ import { SERVER_ENDPOINT } from '../../constants';
 
 const styles = (theme) => ({
     loginPanel: {
-        height: "25em",
+        height: "fit-content",
+        padding: "2em",
         width: "50%",
         backgroundColor: theme.palette.secondary.light,
         position: "absolute",
@@ -29,7 +30,6 @@ const styles = (theme) => ({
     },
     title: {
         textAlign: "center",
-        paddingTop: "1em",
         marginBottom: "1em",
         color: theme.palette.primary.dark
     },
@@ -91,7 +91,7 @@ export class LoginPage extends React.Component {
     }
 
     onLogin = () => {
-        const { login, history } = this.props;
+        const { history } = this.props;
         const { username, password } = this.state;
 
         if (!username.trim()) {
@@ -133,7 +133,8 @@ export class LoginPage extends React.Component {
     }
 
     onCreateAccount = () => {
-        
+        const { history } = this.props;
+        history.push("/create");
     }
 
     render(){
