@@ -7,6 +7,7 @@ import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
 import { UploadPage } from './pages/UploadPage';
 import { DownloadPage } from './pages/DownloadPage';
 import { LoginPage } from './pages/LoginPage';
+import { FilesPage } from './pages/FilesPage';
 
 const theme = createMuiTheme({
     palette: {
@@ -43,6 +44,7 @@ function App() {
                         <Route path="/upload" component={UploadPage}/>
                         <Route path="/download" component={DownloadPage}/>
                         <Route path="/login" component={LoginPage} />
+                        <Route path="/files" component={FilesPage} />
                     </Switch>
                 </ThemeProvider>
             </HashRouter>
