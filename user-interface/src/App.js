@@ -8,6 +8,7 @@ import { UploadPage } from './pages/UploadPage';
 import { DownloadPage } from './pages/DownloadPage';
 import { LoginPage } from './pages/LoginPage';
 import { FilesPage } from './pages/FilesPage';
+import { CreateAccountPage } from './pages/CreateAccountPage';
 
 const theme = createMuiTheme({
     palette: {
@@ -45,6 +46,7 @@ function App() {
                         <Route path="/download" component={DownloadPage}/>
                         <Route path="/login" component={LoginPage} />
                         <Route path="/files" component={FilesPage} />
+                        <Route path="/create" component={CreateAccountPage} />
                     </Switch>
                 </ThemeProvider>
             </HashRouter>
