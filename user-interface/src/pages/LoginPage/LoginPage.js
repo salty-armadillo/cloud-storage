@@ -121,7 +121,6 @@ export class LoginPage extends React.Component {
                             token: token,
                             keyId: keyID
                         })
-                        login(username, token, keyID);
                         history.push("/upload");
                     })
                     .catch((error) => {
