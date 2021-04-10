@@ -7,6 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import InsertDriveFileOutlinedIcon from '@material-ui/icons/InsertDriveFileOutlined';
+import InputBase from '@material-ui/core/InputBase';
 
 const styles = (theme) => ({
     paper: {
@@ -33,18 +34,29 @@ const styles = (theme) => ({
         backgroundColor: theme.palette.primary.light,
         borderRadius: "50%",
         padding: "0.5em",
-        marginBottom: "0.5em"
+        margin: "0.5em auto",
+        width: "5em"
     },
     fileBox: {
         borderWidth: "1px",
         borderStyle: "solid",
         borderColor: theme.palette.secondary.main,
-        padding: "0.5em",
-        // borderRadius: "10%"
+        padding: "0.5em"
     },
     fileIcon: {
         pointerEvents: "none",
         fontSize: "5em"
+    },
+    fileSelectInput: {
+        display: "none"
+    },
+    fileSelectLabel: {
+        fontWeight: "bold",
+        whiteSpace: "pre",
+        color: theme.palette.primary.main,
+        "&:hover": {
+            color: theme.palette.primary.dark
+        }
     }
 })
 
@@ -91,6 +103,23 @@ export class DragDropBox extends React.Component {
         e.stopPropagation();
     }
 
+    openFileInput = () => {
+        document.getElementById("file-select").click();
+    }
+
+    onFileSelect = (e) => {
+        if (e.target.files.length > 0) {
+            const filepath = e.target.files[0].path;
+            const filename = filepath.split("\\")[filepath.split("\\").length - 1];
+            this.setState({
+                filename: filename,
+                isFileOver: false
+            }, () => {
+                this.props.setFilepath(filepath);
+            });
+        }
+    }
+
     render() {
         const { classes, filepath } = this.props;
         const { isFileOver, filename } = this.state;
@@ -108,12 +137,24 @@ export class DragDropBox extends React.Component {
             >
                 { !filepath || isFileOver
                     ? (
-                        <Typography 
-                            className={classes.dragDropText}
-                            variant={'subtitle1'}
-                        >
-                            Drag and drop files here to upload!
-                        </Typography>
+                        <span style={{ display: "flex" }}>
+                            <Typography 
+                                className={classes.dragDropText}
+                                variant={'subtitle1'}
+                            >
+                                Drag and drop or
+                            </Typography>
+                            <Typography variant={'subtitle1'} onClick={this.openFileInput} className={classes.fileSelectLabel}>
+                                {" select "}
+                            </Typography>
+                            <InputBase id="file-select" type="file" className={classes.fileSelectInput} onChange={this.onFileSelect}/>
+                            <Typography 
+                                className={classes.dragDropText}
+                                variant={'subtitle1'}
+                            >
+                                files to upload
+                            </Typography>
+                        </span>
                     ) : (
                         <Paper className={classes.fileBox}>
                             <Box className={classes.iconBox}>
