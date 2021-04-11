@@ -25,7 +25,6 @@ ipcMain.on("logout", () => {
 })
 
 ipcMain.on("getDetails", (e) => {
-  console.log(store);
   e.returnValue = {
     loggedIn: store.get("loggedIn"),
     userId: store.get("userId"),
