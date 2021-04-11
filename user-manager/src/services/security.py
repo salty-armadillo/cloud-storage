@@ -5,6 +5,7 @@ functionality of the application
 
 import os
 import subprocess
+import magic
 import re
 import requests
 import jwt
@@ -111,8 +112,7 @@ def scan_file(filepath):
                     "error": "Sensitive file type detected."
                 })
 
-        output = subprocess.run(["file", "-b","--mime-type", f], capture_output=True, text=True)
-        fileType = output.stdout
+        fileType = magic.from_file(f, mime=True)
 
         #Checking for sensitive data in text files only
         if "text" not in fileType:
