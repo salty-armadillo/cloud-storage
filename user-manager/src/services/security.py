@@ -4,10 +4,14 @@ functionality of the application
 '''
 
 import os
+import subprocess
+import re
 import requests
 import jwt
 from Crypto.PublicKey import RSA
+from werkzeug.exceptions import BadRequest
 import config
+import constants
 
 CLOUD_BASE_ENDPOINT = config.CLOUD_BASE_ENDPOINT
 
@@ -83,3 +87,46 @@ def encode_jwt_token(username):
     )
 
     return token
+
+def scan_file(filepath):
+    '''Scans the given file or directory for sensitive data'''
+    
+    issues = []
+
+    if os.path.isdir(filepath):
+        files = [os.path.join(filepath, f) for f in os.listdir(filepath) if os.path.isfile(os.path.join(filepath, f))]
+    elif os.path.isfile(filepath):
+        files = [filepath]
+    else:
+        raise BadRequest("Unknown file type. Please ensure the selected file is a file or directory.")
+    
+    for f in files:
+        filename = re.split(r"[\\/]", f)[-1]
+
+         # Checking for sensitive file types
+        for ext in constants.SENSITIVE_FILE_EXTS:
+            if f.endswith(ext):
+                issues.append({
+                    "filename": filename,
+                    "error": "Sensitive file type detected."
+                })
+
+        output = subprocess.run(["file", "-b","--mime-type", f], capture_output=True, text=True)
+        fileType = output.stdout
+
+        #Checking for sensitive data in text files only
+        if "text" not in fileType:
+            continue
+
+        with open(f, "r") as f:
+            for num, line in enumerate(f, 1):
+                for s in constants.SENSITIVE_STRINGS:
+                    if s in line.lower():
+                        issues.append({
+                            "filename": filename,
+                            "error": f"Sensitive string '{s}' found on line {num}."
+                        })
+
+    return issues
+    
+
