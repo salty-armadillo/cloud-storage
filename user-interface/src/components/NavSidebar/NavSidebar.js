@@ -125,7 +125,7 @@ export function NavSidebar(props) {
                             <CloudDownloadIcon fontSize={"large"}/>
                         </ListItemIcon>
                     </ListItem>
-                    <ListItem
+                    {/* <ListItem
                         button
                         className={
                             clsx(classes.listItem, {
@@ -138,7 +138,7 @@ export function NavSidebar(props) {
                         <ListItemIcon>
                             <ListIcon fontSize={"large"}/>
                         </ListItemIcon>
-                    </ListItem>
+                    </ListItem> */}
                     <ListItem
                         button
                         className={
