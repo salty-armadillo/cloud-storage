@@ -4,7 +4,24 @@ This is the cloud backend connecting to the S3 instance and helping to store and
 
 ---
 
-## Development startup (Windows)
+## Table of Contexts
+1. [Development](#development)
+    1. [Running](#running)
+    2. [Virtual Environment](#virtual-environment)
+2. [Endpoints](#endpoints)
+3. [Key Features](#key-features)
+    1. [Deployment](#deployment)
+    1. [TLS Encryption (HTTPS)](#tls-encryption-\(https\))
+    2. [Pre-Signed URLs](#pre-signed-urls)
+    3. [Database Access](#database-access)
+4. [Related Documentation](#related-documentation)
+
+---
+
+## Development
+<b>Note:</b> All commands below have only been tested in a Windows environment.
+
+### Running
 ```
 cd ./src
 set FLASK_APP=server.py
@@ -63,9 +80,13 @@ A few risks with this approach come from the idea that the URL is pre-signed. No
 ### Database Access
 The MySQL database is hosted by an AWS RDS instance and has basic authentication (username, password) as well as IAM access. When running locally I have been accessing the instance with the basic authentication however, when deployed the application will be using AWS IAM credentials. The IAM user being used has limited permissions and can only access the <strong>required</strong> services - this is the principle of <strong>least privilege access</strong>.
 
+The AWS RDS instance is also sitting inside a Virtual Private Cloud (VPC) and has rules on its ingress (inbound) and egress (outbound) rules. The inbound rules only allow my local machine and the lambda function to connect to it. The outbound rules all traffic. This prevents malicious access from other external instances or machines.
+
+Some improvements to this setup could allow for the lambda function and the RDS instance to sit inside the same VPC but with the RDS instance inside a private subnet (further restricting access to it) and the lambda instance sitting inside a public subnet. Unfortunately, as I bootstraped my lambda function with Zappa I found the configuration was a bit difficult and fiddly.
+
 ---
 
-## Related documentation and references
+## Related documentation
 * AWS pre-signed URL - https://docs.aws.amazon.com/AmazonS3/latest/userguide/ShareObjectPreSignedURL.html
 * boto3 pre-signed URL - https://boto3.amazonaws.com/v1/documentation/api/latest/guide/s3-presigned-urls.html
 * Running AWS Lambda in a VPC: https://gist.github.com/reggi/dc5f2620b7b4f515e68e46255ac042a7

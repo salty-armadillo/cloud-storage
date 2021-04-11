@@ -4,9 +4,26 @@ This is the local backend connected to the Electron frontend. It also helps to c
 
 ---
 
-## Development (Windows)
+## Table of Contexts
+1. [Development](#development)
+    1. [Running](#running)
+    2. [Virtual Environment](#virtual-environment)
+    3. [Packaging](#packaging)
+2. [Endpoints](#endpoints)
+3. [Key Features](#key-features)
+    1. [TLS Encryption (HTTPS)](#tls-encryption-\(https\))
+    2. [File encryption](#file-encryption)
+    3. [Passwords](#passwords)
+    4. [JWT Integration](#jwt-integration)
+    5. [File scanning](#file-scanning)
+4. [Related Documentation](#related-documentation)
 
-## Running
+---
+
+## Development
+<b>Note:</b> All commands below have only been tested in a Windows environment.
+
+### Running
 ```
 cd ./src
 set FLASK_APP=server.py
@@ -31,7 +48,7 @@ python server.py
 
 ```
 
-## Packaging
+### Packaging
 1. Run the below command
     ```
     cd ./src
@@ -118,7 +135,7 @@ File extension checking is just done by matching the end of the filename - i.e. 
 * .p12
 * .jks
 
-The files are first checked to see if they are text files - this is done via the Unix `file` module command: `file -b --mime-type <filename> | grep text`. This method is not perfect as some file types can be missed (e.g. application/yml) however, I do believe it covers the <b>majority</b> of file types. Each file is then opened and checked for the words below. The list of sensitive words it scans for in text files is:
+The files are first checked to see if they are text files - this is done via the `python-magic` module which uses the Unix `file` command under the hood. This method is not perfect as some file types can be missed (e.g. application/yml) however, I do believe it covers the <b>majority</b> of file types. Each file is then opened and checked for the words below. The list of sensitive words it scans for in text files is:
 * password
 * key
 * pwd
