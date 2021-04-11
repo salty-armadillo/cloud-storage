@@ -28,7 +28,10 @@ def default_handler(err):
 @APP.before_request
 def extract_auth():
     if request.endpoint not in ["user.create_user", "user.login", "base.base"]:
-        g.headers = request.headers
+        g.headers = {
+            "Authorization": request.headers.get("Authorization"),
+            "Key": request.headers.get("Key")
+        }
 
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(HTTPException, default_handler)
