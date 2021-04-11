@@ -54,10 +54,11 @@ python server.py
 |-|-|-|-|-|
 | /download | GET | Download file by given filename | String : filename, String: location, String: keypath | {} |
 | /upload | POST | Upload file | String : filename, String: keypath or keylocation | {} |
+| /upload/scan | POST | Scans file(s) for sensitive data | String: filepath | Array: Lists of issues |
 | /filenames | GET | Get list of all files currently uploaded | | Array : List of filenames |
 | /file | DELETE | Delete file from cloud storage | String: filename | {} |
 | /shutdown | GET | Shutdown the server - to be used by the frontend cleanup activity | | {} |
-| /user/create | POST | Creates a new user | { String: username, String: email, String: password } | {} |
+| /user/create | POST | Creates a new user | String: username, String: email, String: password | {} |
 | /user/details | GET | Get user details | String: username | Object: user details |
 | /user/login | POST | Login a user | String: username, String: password | Object: Token and key ID |
 | /user/logout | POST | Logout the user | | {} |
@@ -96,6 +97,44 @@ The JWT integration is utilising the pyJWT package and the encryption is done wi
 There are some issues with this security protocol - namely the setting up process with the public RSA key. This is not as secure given that the unauthenticated client is sending a key that is automatically accepted by the server. However, I do believe that this issue and the solution as a whole is acceptable given the scale of the project. It can be assumed that the set up procedure for the applications is less prone to attacks or risks.
 
 Another question is the scalability of this solution. The lambda instance that the server is running on only has 50MB of `/tmp` storage to store the public keys.The ID of the key also has to be sent with each HTTPS call.
+
+### File scanning
+The file scanning functionality of this application checks all files given and looks for sensitive file extensions and sensitive data within text files.
+
+File extension checking is just done by matching the end of the filename - i.e. `if filename.endswith(ext)`. The list of file extensions included in the "blacklist" is:
+* .pem
+* .key
+* .ppk
+* .der
+* .csr
+* .crt
+* .cer
+* .spc
+* .p7a
+* .p7b
+* .p7c
+* .p8
+* .pfx
+* .p12
+* .jks
+
+The files are first checked to see if they are text files - this is done via the Unix `file` module command: `file -b --mime-type <filename> | grep text`. This method is not perfect as some file types can be missed (e.g. application/yml) however, I do believe it covers the <b>majority</b> of file types. Each file is then opened and checked for the words below. The list of sensitive words it scans for in text files is:
+* password
+* key
+* pwd
+* secret
+* cred
+* token
+
+This functionality helps to provide an extra check for users and advise them against storing extra-sensitive information. Whilst the storage is encrypted it is still risky and data such as private keys should rarely be stored remotely.
+
+This is not a foolproof implementation of course given that the list of file extensions and words are hard-coded into the code however it does provide some basic protection. Some possible ways to extend this feature would be:
+* Add patterns to the scanning list which could help to match API keys, tokens or cipher keys more accurately.
+* Provide a recommendation for what to do with each issue
+* Provide some capability to scan images of text - i.e. convert images into text to scan
+* Include personal data such as names, emails or birthdates - these types of data are just as valuable as passwords and secrets.
+
+As a bit of background, Google Cloud provides a feature similar to this via their [Cloud Data Loss Prevention](https://cloud.google.com/dlp/docs) feature which does data inspection. A number of similar products also exist for Git including the AWS Labs tool [git-secrets](https://github.com/awslabs/git-secrets) and GitHub's own [security scanning functionality](https://docs.github.com/en/code-security/secret-security/about-secret-scanning).
 
 ---
 
