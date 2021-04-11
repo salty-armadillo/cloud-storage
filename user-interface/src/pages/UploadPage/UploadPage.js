@@ -313,7 +313,7 @@ export class UploadPage extends React.Component {
                                         { checkingFileScan && (
                                             <div className={classes.tableContainer}>
                                                 <Table>
-                                                    <TableHead classNam>
+                                                    <TableHead>
                                                         <TableRow>
                                                             <TableCell className={classes.scanTableHeading}>Filename</TableCell>
                                                             <TableCell className={classes.scanTableHeading}>Reason</TableCell>
