@@ -13,8 +13,14 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import InputBase from '@material-ui/core/InputBase';
 import Chip from '@material-ui/core/Chip';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Snackbar from '@material-ui/core/Snackbar';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 import { NavSidebar } from '../../components/NavSidebar';
 import { DragDropBox } from '../../components/DragDropBox';
@@ -63,13 +69,42 @@ const styles = (theme) => ({
     keyChip: {
         margin: "0 0.5em"
     },
-    uploadButton: {
+    submitButton: {
         marginLeft: "auto",
         marginRight: "0",
         display: "block"
     },
+    button: {
+        margin: "0 0.25em"
+    },
     successAlert: {
         backgroundColor: theme.palette.success.main
+    },
+    scanningContainer: {
+        padding: "1em",
+        marginBottom: "1em"
+    },
+    title: {
+        fontWeight: "bold",
+        color: "#363636",
+        marginBottom: "0.75em"
+    },
+    tableContainer: {
+        backgroundColor: "#FFFFFF",
+        borderRadius: "10px",
+        marginBottom: "1em",
+        overflowY: "scroll",
+        maxHeight: "25em"
+    },
+    scanTableHeading: {
+        fontWeight: "bold"
+    },
+    buttonContainer: {
+        padding: 0,
+        width: "fit-content",
+        display: "block",
+        marginLeft: "auto",
+        marginRight: 0
     }
 })
 
@@ -84,8 +119,11 @@ export class UploadPage extends React.Component {
             keyPath: "",
             keyName: "",
             isFileUploading: false,
+            isFileScanning: false,
+            checkingFileScan: false,
             submitError: "",
-            submitSuccess: false
+            submitSuccess: false,
+            scanIssues: []
         }
     }
 
@@ -130,6 +168,57 @@ export class UploadPage extends React.Component {
         })
     }
 
+    onScanFiles = () => {
+        const { filepath, keyPath } = this.state;
+
+        if (!filepath.trim()) {
+            this.setState({ submitError: "Please select a file to upload." });
+        } else if (!keyPath.trim()) {
+            this.setState({ submitError: "Please select a key or a new key location." });
+        } else {
+            this.setState({ isFileScanning: true, submitError: "" });
+            const wholeState = ipcRenderer.sendSync("getDetails");
+
+            const url = `${SERVER_ENDPOINT}/upload/scan`;
+            const headers = {
+                "Authorization": wholeState.token,
+                "key": wholeState.keyId
+            }
+            const payload = {
+                filepath: filepath.replaceAll("\\", "/")
+            }
+
+            axios
+                .post(url, payload, { headers: headers })
+                .then((response) => {
+                    const data = response.data;
+                    this.setState({
+                        isFileScanning: false,
+                        checkingFileScan: true,
+                        scanIssues: data
+                    })
+                })
+                .catch((error) => {
+                    this.setState({
+                        isFileScanning: false,
+                        submitError: error.response.data.description ? error.response.data.description : "An error has occurred. Please try again."
+                    })
+                })
+        }
+    }
+
+    onCancel = () => {
+        this.setState({
+            filepath: "",
+            keyPath: "",
+            keyName: "",
+            generateNewKey: false,
+            isFileUploading: false,
+            isFileScanning: false,
+            checkingFileScan: false,
+        })
+    }
+
     onUploadFile = () => {
         const { filepath, keyPath, generateNewKey } = this.state;
 
@@ -160,6 +249,8 @@ export class UploadPage extends React.Component {
                         keyPath: "",
                         keyName: "",
                         isFileUploading: false,
+                        isFileScanning: false,
+                        checkingFileScan: false,
                         submitSuccess: true
                     })
                 })
@@ -176,7 +267,17 @@ export class UploadPage extends React.Component {
 
     render(){
         const { classes } = this.props;
-        const { filepath, generateNewKey, keyName, submitError, isFileUploading, submitSuccess } = this.state;
+        const {
+            filepath,
+            generateNewKey,
+            keyName,
+            submitError,
+            isFileUploading,
+            isFileScanning,
+            checkingFileScan,
+            submitSuccess,
+            scanIssues
+        } = this.state;
 
         return (
             <React.Fragment>
@@ -197,64 +298,133 @@ export class UploadPage extends React.Component {
                     </Box>
                     <Paper className={classes.panel}>
                         { submitError && <Typography className={classes.submitErrorText}>{submitError}</Typography>}
-                        <DragDropBox
-                            filepath={filepath}
-                            setFilepath={this.setFilepath}
-                        />
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={generateNewKey}
-                                    onChange={this.toggleGenerateNewKey}
-                                    color="primary"
-                                />
-                            }
-                            label="Generate a new key"
-                        />
-                        <Container className={classes.keySelectContainer}>
-                            <Typography>
-                                { generateNewKey ? "Select a location for your new key: " : "Select a key to encrypt your file with:" }
-                            </Typography>
-                            { !keyName
-                                ? ( 
-                                    <Button 
-                                        className={classes.keyButton}
-                                        color="primary" 
-                                        onClick={this.openFileInput}
-                                    >
-                                        { generateNewKey ? "Choose location" : "Choose key" }
-                                    </Button>
-                                ) : (
-                                    <Chip
-                                        className={classes.keyChip}
-                                        label={keyName}
-                                        color="primary" 
-                                        onDelete={this.onKeyDelete}
-                                    />
-                                )
-                            }
-                            { generateNewKey
+                        { 
+                            (isFileScanning || isFileUploading || checkingFileScan)
                                 ? (
-                                    <input id="key-select" type="file" className={classes.keyInput} onChange={this.onKeySelect} webkitdirectory="true" multiple/>
+                                    <React.Fragment>
+                                        { isFileScanning && (
+                                            <Paper className={classes.scanningContainer}>
+                                                <Typography variant={"h6"} className={classes.title}>
+                                                    Scanning...
+                                                </Typography>
+                                                <LinearProgress color="primary" />
+                                            </Paper>
+                                        )}
+                                        { checkingFileScan && (
+                                            <div className={classes.tableContainer}>
+                                                <Table>
+                                                    <TableHead classNam>
+                                                        <TableRow>
+                                                            <TableCell className={classes.scanTableHeading}>Filename</TableCell>
+                                                            <TableCell className={classes.scanTableHeading}>Reason</TableCell>
+                                                        </TableRow>
+                                                    </TableHead>
+                                                    <TableBody>
+                                                        { (scanIssues.length > 0)
+                                                            ? (
+                                                                scanIssues.map((issue) => {
+                                                                    return (
+                                                                        <TableRow key={`${issue.filename}-${issue.error}`}>
+                                                                            <TableCell>
+                                                                                {issue.filename}
+                                                                            </TableCell>
+                                                                            <TableCell>
+                                                                                {issue.error}
+                                                                            </TableCell>
+                                                                        </TableRow>
+                                                                    )
+                                                                })
+                                                            ) : (
+                                                                <TableRow>
+                                                                    <TableCell align="center" colSpan={2}>No issues found! Select <b>Upload</b> to continue.</TableCell>
+                                                                </TableRow>
+                                                            )
+                                                        }
+                                                    </TableBody>
+                                                </Table>
+                                            </div>
+                                        )}
+                                        <Container className={classes.buttonContainer}>
+                                            <Button
+                                                className={classes.button}
+                                                onClick={this.onCancel}
+                                                disabled={isFileScanning || isFileUploading}
+                                            >
+                                                Cancel
+                                            </Button>
+                                            { isFileUploading
+                                                ? (
+                                                    <CircularProgress size={30} />
+                                                ) : (
+                                                    <Button
+                                                        className={classes.button}
+                                                        color="primary" 
+                                                        variant="contained"
+                                                        disabled={isFileScanning}
+                                                        onClick={this.onUploadFile}
+                                                    >
+                                                        Upload
+                                                    </Button>
+                                                )}
+                                        </Container>
+                                    </React.Fragment>
                                 ) : (
-                                    <InputBase id="key-select" type="file" className={classes.keyInput} onChange={this.onKeySelect}/>
+                                        <React.Fragment>
+                                            <DragDropBox
+                                                filepath={filepath}
+                                                setFilepath={this.setFilepath}
+                                            />
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={generateNewKey}
+                                                        onChange={this.toggleGenerateNewKey}
+                                                        color="primary"
+                                                    />
+                                                }
+                                                label="Generate a new key"
+                                            />
+                                            <Container className={classes.keySelectContainer}>
+                                                <Typography>
+                                                    { generateNewKey ? "Select a location for your new key: " : "Select a key to encrypt your file with:" }
+                                                </Typography>
+                                                { !keyName
+                                                    ? ( 
+                                                        <Button 
+                                                            className={classes.keyButton}
+                                                            color="primary" 
+                                                            onClick={this.openFileInput}
+                                                        >
+                                                            { generateNewKey ? "Choose location" : "Choose key" }
+                                                        </Button>
+                                                    ) : (
+                                                        <Chip
+                                                            className={classes.keyChip}
+                                                            label={keyName}
+                                                            color="primary" 
+                                                            onDelete={this.onKeyDelete}
+                                                        />
+                                                    )
+                                                }
+                                                { generateNewKey
+                                                    ? (
+                                                        <input id="key-select" type="file" className={classes.keyInput} onChange={this.onKeySelect} webkitdirectory="true" multiple/>
+                                                    ) : (
+                                                        <InputBase id="key-select" type="file" className={classes.keyInput} onChange={this.onKeySelect}/>
+                                                    )
+                                                    
+                                                }
+                                            </Container>
+                                            <Button
+                                                className={classes.submitButton}
+                                                color="primary" 
+                                                variant="contained"
+                                                onClick={this.onScanFiles}
+                                            >
+                                                Submit
+                                            </Button>
+                                        </React.Fragment>
                                 )
-                                
-                            }
-                        </Container>
-                        { isFileUploading
-                            ? (
-                                <CircularProgress className={classes.uploadButton}/>
-                            ) : (
-                                <Button
-                                    className={classes.uploadButton}
-                                    color="primary" 
-                                    variant="contained"
-                                    onClick={this.onUploadFile}
-                                >
-                                    Upload
-                                </Button>
-                            )
                         }
                     </Paper>
                 </Container>
